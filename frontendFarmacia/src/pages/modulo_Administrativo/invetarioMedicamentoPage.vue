@@ -6,8 +6,6 @@
         <q-breadcrumbs-el label="Pagina de Consulta e Inventario Medicamentos" />
       </q-breadcrumbs>
     </div>
-
-
     <q-card>
       <q-card-section class="q-pa-none">
         <q-table :rows="filteredRows" :columns="columnsVisible" dense flat table-header-class="text-weight-bolds"

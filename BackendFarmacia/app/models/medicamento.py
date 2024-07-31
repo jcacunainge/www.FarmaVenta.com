@@ -3,7 +3,6 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 class MedicamentoModel(Base):
-    __tablename__ = "medicamentos"
     codigo = Column(String, primary_key=True, nullable=False, comment="Código del medicamento")
     nombre_medicamento = Column(String, nullable=False, comment="Nombre del medicamento")
     fabricante = Column(String, nullable=True, comment="Nombre del fabricante")
