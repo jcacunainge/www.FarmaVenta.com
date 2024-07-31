@@ -1,0 +1,20 @@
+// app global css in SCSS form
+.headerTable thead th {
+  background-color: #154280;
+  color: #fff;
+}
+
+fieldset {
+  border: 1px solid lightgray;
+  margin: 0 auto !important;
+  display: inline-block;
+  text-align: left;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.q-item.q-router-link--active,
+.q-item--active {
+  color: #0c08d3;
+  background-color: #eeebeb;
+}
