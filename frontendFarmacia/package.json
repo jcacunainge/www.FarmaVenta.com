@@ -1,9 +1,9 @@
 {
-  "name": "www-merlin-v2",
+  "name": "www.farmaventa.com",
   "version": "0.0.1",
-  "description": "Merlin - Gecelca SA ESP",
+  "description": "Backend Farmacia - FarmaVenta",
   "productName": "Merlin App",
-  "author": "ELKIN FRUTO <efruto24@hotmail.com>",
+  "author": "Jhan Carlos Acuña <jcacunainge@gmail.com>",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",

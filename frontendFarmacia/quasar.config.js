@@ -56,8 +56,8 @@ module.exports = configure(function (ctx) {
       vueRouterMode: "history", // available values: 'hash', 'history'
       env: {
         API_URL: ctx.dev
-          ? "http://127.0.0.1:8000/api/v1"
-          : "http://127.0.0.1:8000/api/v1",
+          ? "https://www-farmaventa-com.onrender.com/api/v1"
+          : "https://www-farmaventa-com.onrender.com/api/v1",
       },
       // vueRouterBase,
       // vueDevtools,
