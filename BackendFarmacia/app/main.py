@@ -21,6 +21,8 @@ app = FastAPI(**app_config)
 # Configura los orígenes permitidos
 origins = [
     "http://localhost:9000",
+    "https://backend-farmacia-jade.vercel.app/docs#",
+    "https://backend-farmacia-jade.vercel.app/"
 ]
 
 app.add_middleware(
@@ -54,6 +56,6 @@ app.include_router(
     tags=["VENTAS"]
 )
 
-
-
-
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}

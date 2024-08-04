@@ -1,30 +1,28 @@
-<!-- <template>
+<template>
   <q-page padding>
     <div class="row items-center q-gutter-sm q-mb-md">
       <q-breadcrumbs>
         <q-breadcrumbs-el label="Panel Administrativo" />
-        <q-breadcrumbs-el label="Pagina de Ingreso de Medicamentos" />
+        <q-breadcrumbs-el label="Página de Ingreso de Medicamentos" />
       </q-breadcrumbs>
     </div>
 
-    <div class="text-h5 q-mb-md text-blue-10 ">Ingreso de Medicamentos</div>
-    <q-form @submit.prevent="agregarMedicamento" class="q-gutter-sm row">
-      <q-select v-model="form.codigo" label="Nombre Medicamentos" :options="filteredProductos" option-label="label"
-        option-value="value" use-input emit-value map-options outlined filled class="col-xs-12 col-sm-12 col-md-4"
-        hide-bottom-space clearable @filter="filterProducto" />
-      <q-input v-model="form.fabricante" label="Fabricante" outlined filled
-        class="col-xs-12 col-sm-12 col-md-4"></q-input>
-
-      <q-input v-model="form.fecha_vencimiento" label="Fecha de Vencimiento" outlined filled type="date"
-        class="col-xs-12 col-sm-12 col-md-4"></q-input>
-      <q-input v-model.number="form.cantidad" label="Cantidad" outlined filled type="number"
-        class="col-xs-12 col-sm-12 col-md-4"></q-input>
-      <q-input v-model="form.lote" label="Lote" outlined filled class="col-xs-12 col-sm-12 col-md-4"></q-input>
-      <q-input v-model.number="form.stock" label="Stock" outlined filled type="number"
-        class="col-xs-12 col-sm-12 col-md-4"></q-input>
-      <q-input v-model.number="form.precio" label="Precio" outlined filled type="number"
-        class="col-xs-12 col-sm-12 col-md-4"></q-input>
-      <q-btn type="submit" label="Agregar Medicamento" color="primary" class="q-mt-md"></q-btn>
+    <div class="text-h5 q-mb-md text-blue-10">Ingreso de Medicamentos</div>
+    <q-form class="q-gutter-sm row">
+      <div class="q-mb-md col-md-12">
+        <fieldset class="row q-gutter-sm">
+          <legend class="text-blue-10">Información Básica del Comprador</legend>
+          <q-select v-model="formItemCliente.documento_cliente" label="Documentos Cliente" :options="filteredClientes"
+            option-label="label" option-value="value" use-input emit-value map-options outlined filled
+            class="col-xs-12 col-sm-12 col-md-3" dense hide-bottom-space clearable @filter="filterCliente" />
+          <q-input v-model="formItemCliente.nombre_cliente" dense outlined filled type="text" label="Nombre del Cliente"
+            class="col-xs-12 col-sm-12 col-md-3" hide-bottom-space />
+          <q-input v-model="formItemCliente.telefono_cliente" dense outlined filled type="text" label="Teléfono"
+            class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space />
+          <q-input v-model="formItemCliente.correo_cliente" dense outlined filled type="text" label="Correo"
+            class="col-xs-12 col-sm-12 col-md-3" hide-bottom-space />
+        </fieldset>
+      </div>
     </q-form>
 
     <q-list bordered class="q-mt-md">
@@ -60,7 +58,6 @@
         </q-item-section>
       </q-item>
     </q-list>
-
   </q-page>
 </template>
 
@@ -68,128 +65,80 @@
 import { ref, onMounted, watch } from "vue";
 import { api } from "boot/axios";
 
-const medicamentos = ref([]);
-const lvProductos = ref([]);
-
-const form = ref({
-  codigo: '',
-  nombre_medicamento: '',
-  fabricante: '',
-  fecha_vencimiento: '',
-  cantidad: 0,
-  lote: '',
-  stock: 0,
-  precio: 0
+const formItemCliente = ref({
+  nombre_cliente: "",
+  documento_cliente: "",
+  telefono_cliente: "",
+  correo_cliente: "",
 });
 
-const resetForm = () => {
-  form.value = {
-    codigo: null,
-    nombre_medicamento: null,
-    fabricante: null,
-    fecha_vencimiento: null,
-    cantidad: null,
-    lote: null,
-    stock: null,
-    precio: null
-  };
-};
-
-const agregarMedicamento = () => {
-  medicamentos.value.push({ ...form.value });
-  resetForm();
-};
-
 watch(
-  medicamentos,
-  (newMedicamentos) => {
-    console.log("Datos actualizados:", newMedicamentos);
-  },
-  { deep: true }
-);
-
-const eliminarMedicamento = (index) => {
-  medicamentos.value.splice(index, 1);
-  console.log(medicamentos)
-  resetForm();
-};
-
-watch(
-  () => form.value.codigo,
-  async (newCodigo) => {
-    if (newCodigo === "") {
-      resetForm();
-    } else {
-      await obtenerIdMedicamento();
+  () => [formItemCliente.value.documento_cliente],
+  async ([newDocumento]) => {
+    formItemCliente.value.nombre_cliente = "";
+    formItemCliente.value.telefono_cliente = "";
+    formItemCliente.value.correo_cliente = "";
+    if (newDocumento) {
+      await obtenerCliente();
     }
-  },
-  { immediate: true }
+  }
 );
-
 
 onMounted(async () => {
   await initialize();
 });
 
 const initialize = async () => {
-  await producto();
+  await cargarClientes();
 };
 
-// Sección productos
-const filteredProductos = ref([]);
-const producto = async () => {
+const filteredClientes = ref([]);
+const lvclientes = ref([]);
+
+const cargarClientes = async () => {
   try {
-    const { data } = await api.get("medicamentos/");
-    lvProductos.value = data.map(({ codigo, nombre_medicamento }) => ({
-      value: codigo,
-      label: `${nombre_medicamento}`,
+    const { data } = await api.get("clientes/");
+    lvclientes.value = data.map(({ documento_cliente }) => ({
+      value: documento_cliente,
+      label: documento_cliente,
     }));
-    filteredProductos.value = lvProductos.value;
+    filteredClientes.value = lvclientes.value;
   } catch (error) {
     console.warn(error?.response?.data?.message);
   }
 };
 
-
-// Función para filtrar los proveedores basándose en el input del usuario
-const filterProducto = (val, update) => {
+const filterCliente = (val, update) => {
   if (val === "") {
     update(() => {
-      filteredProductos.value = lvProductos.value;
+      filteredClientes.value = lvclientes.value;
     });
     return;
   }
   update(() => {
     const needle = val.toLowerCase();
-    filteredProductos.value = lvProductos.value.filter((provider) =>
-      provider.label.toLowerCase().includes(needle)
+    filteredClientes.value = lvclientes.value.filter((cliente) =>
+      cliente.label.toLowerCase().includes(needle)
     );
   });
 };
 
-
-const obtenerIdMedicamento = async () => {
-  const { codigo } = form.value;
-  if (!codigo) {
-    return;
-  }
+const obtenerCliente = async () => {
+  const { documento_cliente } = formItemCliente.value;
   try {
-    const { data } = await api.get(`medicamentos/${form.value.codigo}`);
+    const { data } = await api.get(`clientes/${documento_cliente}`);
     if (data) {
-      form.value.nombre_medicamento = data.nombre_medicamento;
-      form.value.fabricante = data.fabricante;
-      form.value.fecha_vencimiento = data.fecha_vencimiento;
-      form.value.cantidad = data.cantidad;
-      form.value.lote = data.lote;
-      form.value.stock = data.stock;
-      form.value.precio = data.precio;
+      formItemCliente.value.nombre_cliente = data.nombre_cliente;
+      formItemCliente.value.correo_cliente = data.correo_cliente;
+      formItemCliente.value.telefono_cliente = data.telefono_cliente;
     }
   } catch (error) {
     console.warn(error?.response?.data?.message);
   }
 };
-</script> -->
+</script>
 
+<!--
 <template>
   <q-page padding>
     <div class="row items-center q-gutter-sm q-mb-md">
@@ -244,7 +193,7 @@ const obtenerIdMedicamento = async () => {
         </q-tr>
       </template>
     </DataTable>
-    <!-- dialog -->
+
     <ModalDialog v-model="dialogForm" :title="formTitle" :on-save="save" :on-close="close">
       <template #body>
         <q-input v-model="formItem.codigo" label="Código" dense type="text" class="col-xs-12 col-sm-12 col-md-6 "
@@ -265,7 +214,7 @@ const obtenerIdMedicamento = async () => {
           class="col-xs-12 col-sm-12 col-md-6" outlined />
       </template>
     </ModalDialog>
-    <!-- ./dialog -->
+
   </q-page>
 </template>
 
@@ -303,106 +252,123 @@ const formItem = ref({
   lote: '',
   stock: 0,
   precio: 0
-
 });
 
+const reset = () => {
+
+const masCodigo = Math.max(
+0,
+...desserts.value.map((item) => item.codigo)
+);
+
+formItem.value = {
+codigo: masCodigo,
+nombre_medicamento: null,
+fabricante: null,
+fecha_vencimiento: null,
+cantidad: 0,
+lote: null,
+stock: 0,
+precio: 0
+};
+};
+
 onMounted(async () => {
-  await initialize();
+await initialize();
 });
 
 const formTitle = computed(() => {
-  return editedIndex.value === -1
-    ? "Nuevo Ingresar Medicamentos"
-    : "Modificar Ingresar Medicamentos";
+return editedIndex.value === -1
+? "Nuevo Ingresar Medicamentos"
+: "Modificar Ingresar Medicamentos";
 });
 
 const initialize = async () => {
-  await fetchData();
+await fetchData();
+adjusteCodigoMedicamento()
 };
 
 /*Trae los registros de la tabla*/
 const fetchData = async () => {
-  await api
-    .get("medicamentos/")
-    .then(({ data }) => {
-      console.log(data)
-      desserts.value = data;
-    })
-    .catch((error) => {
-      messageWarning(error?.response?.data?.message);
-    });
+await api
+.get("medicamentos/")
+.then(({ data }) => {
+console.log(data)
+desserts.value = data;
+})
+.catch((error) => {
+messageWarning(error?.response?.data?.message);
+});
 };
 
+
 const addItem = () => {
-  dialogForm.value = true;
+reset()
+dialogForm.value = true;
 };
 
 const editItem = (item) => {
-  editedIndex.value = desserts.value.indexOf(item);
-  formItem.value = Object.assign({}, item);
-  dialogForm.value = true;
-};
-
-const reset = () => {
-  formItem.value = {};
+editedIndex.value = desserts.value.indexOf(item);
+formItem.value = Object.assign({}, item);
+dialogForm.value = true;
 };
 
 const close = () => {
-  dialogForm.value = false;
-  setTimeout(() => {
-    editedIndex.value = -1;
-    reset();
-  }, 300);
+dialogForm.value = false;
+setTimeout(() => {
+editedIndex.value = -1;
+reset();
+}, 300);
 };
 
 const save = async () => {
-  const formData = JSON.stringify(formItem.value);
-  if (editedIndex.value > -1) {
-    try {
-      await api.put(`medicamentos/${formItem.value.codigo}`, formData);
-      initialize();
-      close();
-    } catch (error) {
-      messageWarning("Error al actualizar");
-    } finally {
-      btnSaveLoading.value = false;
-    }
-  } else {
-    try {
-      await api.post("medicamentos/", formData);
-      messageSuccess("Medicamento Ingresado Corretamente");
-      initialize();
-      close();
-    } catch (error) {
-      messageWarning("Error al Ingresar Medicamento");
-    }
-  }
+const formData = JSON.stringify(formItem.value);
+if (editedIndex.value > -1) {
+try {
+await api.put(`medicamentos/${formItem.value.codigo}`, formData);
+initialize();
+close();
+} catch (error) {
+messageWarning("Error al actualizar");
+} finally {
+btnSaveLoading.value = false;
+}
+} else {
+try {
+await api.post("medicamentos/", formData);
+messageSuccess("Medicamento Ingresado Corretamente");
+initialize();
+close();
+} catch (error) {
+messageWarning("Error al Ingresar Medicamento");
+}
+}
 };
 
 const deleteItem = (codigo) => {
-  try {
-    $q.dialog({
-      title: "Eliminar Información",
-      message: "¿Desea eliminar esta Información?",
-      cancel: true,
-      persistent: true,
-    }).onOk(async () => {
-      await api.delete(`medicamentos/${codigo}`);
-      $q.notify({
-        color: "positive",
-        textColor: "white",
-        icon: "check",
-        message: "Información eliminada",
-        timeout: 2000,
-      });
-      await initialize();
-    });
-  } catch (error) {
-    console.log(error);
-    messageWarning(error?.response?.data?.message);
-  }
+try {
+$q.dialog({
+title: "Eliminar Información",
+message: "¿Desea eliminar esta Información?",
+cancel: true,
+persistent: true,
+}).onOk(async () => {
+await api.delete(`medicamentos/${codigo}`);
+messageSuccess("Items Medicamentos Eliminado")
+adjusteCodigoMedicamento()
+await initialize();
+});
+} catch (error) {
+console.log(error);
+messageWarning(error?.response?.data?.message);
+}
 };
 
+const adjusteCodigoMedicamento = () => {
+desserts.value.forEach((item, index) => {
+item.notdcons = index + 1;
+});
+};
 const columns = [
   {
     name: "codigo",
@@ -471,4 +437,4 @@ const columns = [
     align: "center",
   },
 ];
-</script>
+</script> -->

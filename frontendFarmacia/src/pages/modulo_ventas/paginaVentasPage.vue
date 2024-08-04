@@ -16,120 +16,32 @@
           <div class="q-mb-md">
             <fieldset class="row q-gutter-sm">
               <legend class="text-blue-10">Información Básica Vendedor</legend>
-              <q-input
-                v-model="formItemVendedor.codigo_usuario"
-                dense
-                outlined
-                filled
-                type="text"
-                disable
-                readonly
-                label="Nombre del Vendedor:"
-                class="col-xs-12 col-sm-12 col-md-2"
-                hide-bottom-space
-              />
-              <q-input
-                v-model="formItemVendedor.codigo_usuario"
-                dense
-                outlined
-                filled
-                type="text"
-                disable
-                readonly
-                label="Codigo Vendedor:"
-                class="col-xs-12 col-sm-12 col-md-2"
-                hide-bottom-space
-              />
-              <q-input
-                v-model="formItemVendedor.nombre_negocio"
-                dense
-                outlined
-                filled
-                type="text"
-                disable
-                readonly
-                label="Nombre Negocio:"
-                class="col-xs-12 col-sm-12 col-md-2"
-                hide-bottom-space
-              />
-              <q-input
-                v-model="formItemVendedor.dirrecion_negocio"
-                dense
-                outlined
-                filled
-                type="text"
-                disable
-                readonly
-                label="Dirreción Negocio:"
-                class="col-xs-12 col-sm-12 col-md-2"
-                hide-bottom-space
-              />
-              <q-input
-                v-model="formItemVendedor.telefono_negocio"
-                dense
-                outlined
-                filled
-                type="text"
-                disable
-                readonlylabel="Telefono:"
-                class="col-xs-12 col-sm-12 col-md-2"
-                hide-bottom-space
-              />
+              <q-input v-model="formItemVendedor.codigo_usuario" dense outlined filled type="text" disable readonly
+                label="Nombre del Vendedor:" class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space />
+              <q-input v-model="formItemVendedor.codigo_usuario" dense outlined filled type="text" disable readonly
+                label="Codigo Vendedor:" class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space />
+              <q-input v-model="formItemVendedor.nombre_negocio" dense outlined filled type="text" disable readonly
+                label="Nombre Negocio:" class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space />
+              <q-input v-model="formItemVendedor.dirrecion_negocio" dense outlined filled type="text" disable readonly
+                label="Dirreción Negocio:" class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space />
+              <q-input v-model="formItemVendedor.telefono_negocio" dense outlined filled type="text" disable
+                readonlylabel="Telefono:" class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space />
             </fieldset>
           </div>
           <div class="q-mb-md">
             <fieldset class="row q-gutter-sm">
               <legend class="text-blue-10">Información Básica Comprador</legend>
-              <q-input
-                v-model="formItemCliente.documento_cliente"
-                dense
-                outlined
-                filled
-                type="text"
-                label="Número Documento"
-                class="col-xs-12 col-sm-12 col-md-2"
-                hide-bottom-space
-                @blur="fetchClienteData"
-              />
-              <q-input
-                v-model="formItemCliente.nombre_cliente"
-                dense
-                outlined
-                filled
-                type="text"
-                label="Nombre del cliente"
-                class="col-xs-12 col-sm-12 col-md-2"
-                hide-bottom-space
-              />
-              <q-input
-                v-model="formItemCliente.telefono_cliente"
-                dense
-                outlined
-                filled
-                type="text"
-                label="Teléfono"
-                class="col-xs-12 col-sm-12 col-md-2"
-                hide-bottom-space
-              />
-              <q-input
-                v-model="formItemCliente.correo_cliente"
-                dense
-                outlined
-                filled
-                type="text"
-                label="Correo"
-                class="col-xs-12 col-sm-12 col-md-2"
-                hide-bottom-space
-              />
-              <q-btn
-                @click="guardarCliente"
-                color="green"
-                text-color="white"
-                dense
-                class="q-pa-sm"
-                label="Guardar Cliente"
-                style="width: 150px"
-              />
+              <q-input v-model="formItemCliente.documento_cliente" dense outlined filled type="text"
+                label="Número Documento" class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space
+                @blur="fetchClienteData" />
+              <q-input v-model="formItemCliente.nombre_cliente" dense outlined filled type="text"
+                label="Nombre del cliente" class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space />
+              <q-input v-model="formItemCliente.telefono_cliente" dense outlined filled type="text" label="Teléfono"
+                class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space />
+              <q-input v-model="formItemCliente.correo_cliente" dense outlined filled type="text" label="Correo"
+                class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space />
+              <q-btn @click="guardarCliente" color="green" text-color="white" dense class="q-pa-sm"
+                label="Guardar Cliente" style="width: 150px" />
             </fieldset>
           </div>
         </q-card>
@@ -137,30 +49,14 @@
     </div>
 
     <div>
-      <q-table
-        :rows="productos"
-        :columns="columnas"
-        row-key="codigo"
-        flat
-        separator="cell"
-        class="headerTable"
-        dense
-      >
+      <q-table :rows="productos" :columns="columnas" row-key="codigo" flat separator="cell" class="headerTable" dense>
         <template v-slot:body-cell="props">
           <q-td :props="props">
             <!-- Condición para la columna nombre_medicamento -->
             <template v-if="props.col.field === 'nombre_medicamento'">
-              <q-select
-                v-model="props.row[props.col.field]"
-                use-input
-                hide-dropdown-icon
-                :options="optionesProductos"
-                @filter="filterFn"
-                @update:model-value="actualizarCampos(props)"
-                @keydown.enter="manejarTeclaEnter(props)"
-                @keydown.tab="moverALaSiguienteFila(props)"
-                clearable
-              />
+              <q-select v-model="props.row[props.col.field]" use-input hide-dropdown-icon :options="optionesProductos"
+                @filter="filterFn" @update:model-value="actualizarCampos(props)"
+                @keydown.enter="manejarTeclaEnter(props)" @keydown.tab="moverALaSiguienteFila(props)" clearable />
             </template>
             <!-- Condición para las columnas no editables -->
             <template v-else-if="!esEditable(props.col.field)">
@@ -168,12 +64,8 @@
             </template>
             <!-- Condición para las columnas editables -->
             <template v-else>
-              <q-input
-                v-model="props.row[props.col.field]"
-                @keydown.enter="manejarTeclaEnter(props)"
-                @keydown.tab="moverALaSiguienteFila(props)"
-                @update:model-value="actualizarTotal(props.row)"
-              />
+              <q-input v-model="props.row[props.col.field]" @keydown.enter="manejarTeclaEnter(props)"
+                @keydown.tab="moverALaSiguienteFila(props)" @update:model-value="actualizarTotal(props.row)" />
             </template>
           </q-td>
         </template>
@@ -182,36 +74,17 @@
           <div class="col-grow flex row justify-between">
             <div class="q-gutter-md">
               <q-checkbox label="Ver Solo Stock" v-model="verStock" />
-              <q-btn
-                color="white"
-                text-color="black"
-                dense
-                class="q-ml-sm q-pa-sm"
-                label="Ventas Detalladas"
-                style="width: 180px"
-              />
+              <q-btn color="white" text-color="black" dense class="q-ml-sm q-pa-sm" label="Ventas Detalladas"
+                style="width: 180px" />
             </div>
             <div>
-              <q-btn
-                text-color="white"
-                dense
-                class="bg-blue-10 q-ml-sm q-pa-sm"
-                label="Realizar Venta"
-                style="width: 180px"
-                @click="guardarVenta"
-              />
+              <q-btn text-color="white" dense class="bg-blue-10 q-ml-sm q-pa-sm" label="Realizar Venta"
+                style="width: 180px" @click="guardarVenta" />
             </div>
           </div>
         </template>
         <template #bottom>
-          <q-btn
-            color="green"
-            text-color="white"
-            dense
-            class="q-pa-sm"
-            label="Cotizar"
-            style="width: 100px"
-          />
+          <q-btn color="green" text-color="white" dense class="q-pa-sm" label="Cotizar" style="width: 100px" />
         </template>
       </q-table>
     </div>
@@ -491,11 +364,10 @@ const guardarCliente = async () => {
   const formData = JSON.stringify(formItemCliente.value);
   try {
     const response = await api.post("clientes/", formData);
-    messageSuccess(response?.data?.mensaje || "Cliente guardado con éxito!");
+    messageSuccess("Cliente guardado con éxito!");
   } catch (error) {
-    console.error("Error saving client:", error);
     messageWarning(
-      error.response?.data?.mensaje || "Error al guardar el cliente!"
+      "Error al guardar el cliente!"
     );
   }
 };
@@ -507,26 +379,14 @@ const dataInfoVentta = computed(() => ({
 }));
 
 const guardarVenta = async (row) => {
-  // Elimina filas vacías
+
 
   try {
+    // Elimina filas vacías
     dataInfoVentta.value.itemsVentas = dataInfoVentta.value.itemsVentas.filter(
       (item) => item.nombre_medicamento.trim() !== ""
     );
     const response = await api.post("ventas/", dataInfoVentta.value);
-    if (response.data && response.data.status === "200") {
-      const dataMedicamentos = {
-        nombre_medicamento: "Aspirina",
-        fabricante: "Bayer",
-        fecha_vencimiento: "2025-12-31",
-        cantidad: 100,
-        lote: "L001",
-        stock: 200,
-        precio: 500,
-      };
-      await api.put("medicamentos/{codigo}");
-    }
-
     productos.value = [{}];
 
     formItemCliente.value = {
@@ -535,11 +395,11 @@ const guardarVenta = async (row) => {
       telefono_cliente: "",
       correo_cliente: "",
     };
-    messageSuccess(data.mensaje || "Venta Realizada con éxito!");
+    messageSuccess("Venta Realizada con éxito!");
   } catch (error) {
     console.error("Error saving sale:", error);
     messageWarning(
-      error.response?.data?.mensaje || "Error al realizar la venta!"
+      "Error al realizar la venta!"
     );
   }
 };
