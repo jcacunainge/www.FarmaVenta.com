@@ -1,6 +1,5 @@
-# Merlin App (www-merlin-v2)
-
-Merlin - Gecelca SA ESP
+# Farmaci FarmaVenta (www.farmaventa.com)
+www.farmaventa.com
 
 ## Install the dependencies
 ```bash
