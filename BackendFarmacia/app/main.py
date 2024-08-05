@@ -21,7 +21,7 @@ app = FastAPI(**app_config)
 # Configura los orígenes permitidos
 origins = [
     "http://localhost:9000",
-    "https://backend-farmacia-jade.vercel.app/docs#",
+    "https://farmaventa.netlify.app/",
     "https://backend-farmacia-jade.vercel.app/"
 ]
 
