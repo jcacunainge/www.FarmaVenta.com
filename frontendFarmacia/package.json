@@ -2,7 +2,7 @@
   "name": "www.farmaventa.com",
   "version": "0.0.1",
   "description": "Punto de Venta Farmacia - FarmaVenta",
-  "productName": "Merlin App",
+  "productName": "farma venta",
   "author": "Jhan Carlos Acuña <jcacunainge@gmail.com>",
   "private": true,
   "scripts": {
@@ -10,7 +10,7 @@
     "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
-    "build": "quasar build"
+    "build": "npm install -g @quasar/cli && quasar build"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.9",
