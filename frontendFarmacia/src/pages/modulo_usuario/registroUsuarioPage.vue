@@ -100,15 +100,21 @@ const formItem = ref({
 
 
 const router = useRouter()
+
+
 const reegistrarUsuario = async () => {
   const registrarUsuario = JSON.stringify(formItem.value);
   try {
     console.log(registrarUsuario);
-    await api.post("usuario/register", registrarUsuario);
-    router.push({ name: 'login' })
+    await api.post("usuario/register", registrarUsuario, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    router.push({ name: 'login' });
   } catch (error) {
-    console.log(error)
-    messageWarning(error?.response?.data?.message);
+    const errorMessage = error.response?.data?.detail || 'Error desconocido';
+    messageWarning(errorMessage);
   }
 };
 </script>
@@ -116,12 +122,8 @@ const reegistrarUsuario = async () => {
 <style scoped>
 .imgFondo {
   height: 100vh;
-
-}
-
-.flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 </style>

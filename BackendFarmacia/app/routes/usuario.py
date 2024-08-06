@@ -10,7 +10,7 @@ router = APIRouter()
 async def registrar(usuario: UsuarioCrear):
     usuario_existente = await obtener_usuario_por_correo(usuario.correo)
     if usuario_existente:
-        raise HTTPException(status_code=400, detail="Correo de usuario ya tomado")
+        raise HTTPException(status_code=400, detail="El correo electronico ya existe")
     usuario_modelo = UsuarioModelo(**usuario.dict())
     await crear_usuario(usuario_modelo)
     return usuario_modelo
@@ -20,7 +20,6 @@ async def iniciar_sesion(usuario: UsuarioSalida):
     usuario_existente = await obtener_usuario_por_correo(usuario.correo)
     if not usuario_existente or usuario_existente.contraseña != usuario.contraseña:
         raise HTTPException(status_code=400, detail="Correo de usuario o contraseña inválidos")
-    
     # Convertir ObjectId a string
     usuario_dict = usuario_existente.dict(by_alias=True)
     return JSONResponse(

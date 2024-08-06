@@ -1,148 +1,8 @@
-<!-- <template>
-  <q-page padding>
-    <div class="row items-center q-gutter-sm q-mb-md">
-      <q-breadcrumbs>
-        <q-breadcrumbs-el label="Panel Administrativo" />
-        <q-breadcrumbs-el label="Página de Ingreso de Medicamentos" />
-      </q-breadcrumbs>
-    </div>
-
-    <div class="text-h5 q-mb-md text-blue-10">Ingreso de Medicamentos</div>
-    <q-form class="q-gutter-sm row">
-      <div class="q-mb-md col-md-12">
-        <fieldset class="row q-gutter-sm">
-          <legend class="text-blue-10">Información Básica del Comprador</legend>
-          <q-select v-model="formItemCliente.documento_cliente" label="Documentos Cliente" :options="filteredClientes"
-            option-label="label" option-value="value" use-input emit-value map-options outlined filled
-            class="col-xs-12 col-sm-12 col-md-3" dense hide-bottom-space clearable @filter="filterCliente" />
-          <q-input v-model="formItemCliente.nombre_cliente" dense outlined filled type="text" label="Nombre del Cliente"
-            class="col-xs-12 col-sm-12 col-md-3" hide-bottom-space />
-          <q-input v-model="formItemCliente.telefono_cliente" dense outlined filled type="text" label="Teléfono"
-            class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space />
-          <q-input v-model="formItemCliente.correo_cliente" dense outlined filled type="text" label="Correo"
-            class="col-xs-12 col-sm-12 col-md-3" hide-bottom-space />
-        </fieldset>
-      </div>
-    </q-form>
-
-    <q-list bordered class="q-mt-md">
-      <q-item v-for="(medicamento, index) in medicamentos" :key="medicamento.codigo" class="bg-red-1 q-mb-md">
-        <q-item-section>
-          <q-item-label>
-            <span class="text-weight-bold">Código: </span>{{ medicamento.codigo }}
-          </q-item-label>
-          <q-item-label>
-            <span class="text-weight-bold">Nombre Medicamento: </span>{{ medicamento.nombre_medicamento }}
-          </q-item-label>
-          <q-item-label>
-            <span class="text-weight-bold">Fabricante: </span>{{ medicamento.fabricante }}
-          </q-item-label>
-          <q-item-label>
-            <span class="text-weight-bold">Fecha Vencimiento: </span>{{ medicamento.fecha_vencimiento }}
-          </q-item-label>
-          <q-item-label>
-            <span class="text-weight-bold">Cantidad: </span>{{ medicamento.cantidad }}
-          </q-item-label>
-          <q-item-label>
-            <span class="text-weight-bold">Lote: </span>{{ medicamento.lote }}
-          </q-item-label>
-          <q-item-label>
-            <span class="text-weight-bold">Stock: </span>{{ medicamento.stock }}
-          </q-item-label>
-          <q-item-label>
-            <span class="text-weight-bold">Precio: </span>{{ medicamento.precio }}
-          </q-item-label>
-        </q-item-section>
-        <q-item-section side>
-          <q-btn icon="delete" color="red" @click="eliminarMedicamento(index)"></q-btn>
-        </q-item-section>
-      </q-item>
-    </q-list>
-  </q-page>
-</template>
-
-<script setup>
-import { ref, onMounted, watch } from "vue";
-import { api } from "boot/axios";
-
-const formItemCliente = ref({
-  nombre_cliente: "",
-  documento_cliente: "",
-  telefono_cliente: "",
-  correo_cliente: "",
-});
-
-watch(
-  () => [formItemCliente.value.documento_cliente],
-  async ([newDocumento]) => {
-    formItemCliente.value.nombre_cliente = "";
-    formItemCliente.value.telefono_cliente = "";
-    formItemCliente.value.correo_cliente = "";
-    if (newDocumento) {
-      await obtenerCliente();
-    }
-  }
-);
-
-onMounted(async () => {
-  await initialize();
-});
-
-const initialize = async () => {
-  await cargarClientes();
-};
-
-const filteredClientes = ref([]);
-const lvclientes = ref([]);
-
-const cargarClientes = async () => {
-  try {
-    const { data } = await api.get("clientes/");
-    lvclientes.value = data.map(({ documento_cliente }) => ({
-      value: documento_cliente,
-      label: documento_cliente,
-    }));
-    filteredClientes.value = lvclientes.value;
-  } catch (error) {
-    console.warn(error?.response?.data?.message);
-  }
-};
-
-const filterCliente = (val, update) => {
-  if (val === "") {
-    update(() => {
-      filteredClientes.value = lvclientes.value;
-    });
-    return;
-  }
-  update(() => {
-    const needle = val.toLowerCase();
-    filteredClientes.value = lvclientes.value.filter((cliente) =>
-      cliente.label.toLowerCase().includes(needle)
-    );
-  });
-};
-
-const obtenerCliente = async () => {
-  const { documento_cliente } = formItemCliente.value;
-  try {
-    const { data } = await api.get(`clientes/${documento_cliente}`);
-    if (data) {
-      formItemCliente.value.nombre_cliente = data.nombre_cliente;
-      formItemCliente.value.correo_cliente = data.correo_cliente;
-      formItemCliente.value.telefono_cliente = data.telefono_cliente;
-    }
-  } catch (error) {
-    console.warn(error?.response?.data?.message);
-  }
-};
-</script> -->
-
 <template>
   <q-page padding>
     <div class="row items-center q-gutter-sm q-mb-md">
       <q-breadcrumbs>
-        <q-breadcrumbs-el label="Ingreso" />
+        <q-breadcrumbs-el label="Modulo Administrativo" />
         <q-breadcrumbs-el label="Ingresar Medicamentos" />
       </q-breadcrumbs>
     </div>
@@ -255,118 +115,118 @@ const formItem = ref({
 
 const reset = () => {
 
-const masCodigo = Math.max(
-0,
-...desserts.value.map((item) => item.codigo)
-);
+  const masCodigo = Math.max(
+    0,
+    ...desserts.value.map((item) => item.codigo)
+  );
 
-formItem.value = {
-codigo: masCodigo,
-nombre_medicamento: null,
-fabricante: null,
-fecha_vencimiento: null,
-cantidad: 0,
-lote: null,
-stock: 0,
-precio: 0
-};
+  formItem.value = {
+    codigo: masCodigo,
+    nombre_medicamento: null,
+    fabricante: null,
+    fecha_vencimiento: null,
+    cantidad: 0,
+    lote: null,
+    stock: 0,
+    precio: 0
+  };
 };
 
 onMounted(async () => {
-await initialize();
+  await initialize();
 });
 
 const formTitle = computed(() => {
-return editedIndex.value === -1
-? "Nuevo Ingresar Medicamentos"
-: "Modificar Ingresar Medicamentos";
+  return editedIndex.value === -1
+    ? "Nuevo Ingresar Medicamentos"
+    : "Modificar Ingresar Medicamentos";
 });
 
 const initialize = async () => {
-await fetchData();
-adjusteCodigoMedicamento()
+  await fetchData();
+  adjusteCodigoMedicamento()
 };
 
 /*Trae los registros de la tabla*/
 const fetchData = async () => {
-await api
-.get("medicamentos/")
-.then(({ data }) => {
-console.log(data)
-desserts.value = data;
-})
-.catch((error) => {
-messageWarning(error?.response?.data?.message);
-});
+  await api
+    .get("medicamentos/")
+    .then(({ data }) => {
+      console.log(data)
+      desserts.value = data;
+    })
+    .catch((error) => {
+      messageWarning(error?.response?.data?.message);
+    });
 };
 
 
 const addItem = () => {
-reset()
-dialogForm.value = true;
+  reset()
+  dialogForm.value = true;
 };
 
 const editItem = (item) => {
-editedIndex.value = desserts.value.indexOf(item);
-formItem.value = Object.assign({}, item);
-dialogForm.value = true;
+  editedIndex.value = desserts.value.indexOf(item);
+  formItem.value = Object.assign({}, item);
+  dialogForm.value = true;
 };
 
 const close = () => {
-dialogForm.value = false;
-setTimeout(() => {
-editedIndex.value = -1;
-reset();
-}, 300);
+  dialogForm.value = false;
+  setTimeout(() => {
+    editedIndex.value = -1;
+    reset();
+  }, 300);
 };
 
 const save = async () => {
-const formData = JSON.stringify(formItem.value);
-if (editedIndex.value > -1) {
-try {
-await api.put(`medicamentos/${formItem.value.codigo}`, formData);
-initialize();
-close();
-} catch (error) {
-messageWarning("Error al actualizar");
-} finally {
-btnSaveLoading.value = false;
-}
-} else {
-try {
-await api.post("medicamentos/", formData);
-messageSuccess("Medicamento Ingresado Corretamente");
-initialize();
-close();
-} catch (error) {
-messageWarning("Error al Ingresar Medicamento");
-}
-}
+  const formData = JSON.stringify(formItem.value);
+  if (editedIndex.value > -1) {
+    try {
+      await api.put(`medicamentos/${formItem.value.codigo}`, formData);
+      initialize();
+      close();
+    } catch (error) {
+      messageWarning("Error al actualizar");
+    } finally {
+      btnSaveLoading.value = false;
+    }
+  } else {
+    try {
+      await api.post("medicamentos/", formData);
+      messageSuccess("Medicamento Ingresado Corretamente");
+      initialize();
+      close();
+    } catch (error) {
+      messageWarning("Error al Ingresar Medicamento");
+    }
+  }
 };
 
 const deleteItem = (codigo) => {
-try {
-$q.dialog({
-title: "Eliminar Información",
-message: "¿Desea eliminar esta Información?",
-cancel: true,
-persistent: true,
-}).onOk(async () => {
-await api.delete(`medicamentos/${codigo}`);
-messageSuccess("Items Medicamentos Eliminado")
-adjusteCodigoMedicamento()
-await initialize();
-});
-} catch (error) {
-console.log(error);
-messageWarning(error?.response?.data?.message);
-}
+  try {
+    $q.dialog({
+      title: "Eliminar Información",
+      message: "¿Desea eliminar esta Información?",
+      cancel: true,
+      persistent: true,
+    }).onOk(async () => {
+      await api.delete(`medicamentos/${codigo}`);
+      messageSuccess("Items Medicamentos Eliminado")
+      adjusteCodigoMedicamento()
+      await initialize();
+    });
+  } catch (error) {
+    console.log(error);
+    messageWarning(error?.response?.data?.message);
+  }
 };
 
 const adjusteCodigoMedicamento = () => {
-desserts.value.forEach((item, index) => {
-item.notdcons = index + 1;
-});
+  desserts.value.forEach((item, index) => {
+    item.notdcons = index + 1;
+  });
 };
 const columns = [
   {

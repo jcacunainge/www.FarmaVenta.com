@@ -2,7 +2,7 @@
   <q-page padding>
     <div class="row items-center q-gutter-sm q-mb-md">
       <q-breadcrumbs>
-        <q-breadcrumbs-el label="Ventas" />
+        <q-breadcrumbs-el label="Modulo de Ventas" />
         <q-breadcrumbs-el label="Pagina de Ventas de Medicamentos" />
       </q-breadcrumbs>
     </div>
@@ -32,12 +32,11 @@
             <fieldset class="row q-gutter-sm">
               <legend class="text-blue-10">Información Básica Comprador</legend>
               <q-input v-model="formItemCliente.documento_cliente" dense outlined filled type="text"
-                label="Número Documento" class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space
-                @blur="fetchClienteData" />
+                label="Número Documento" class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space clearable />
               <q-input v-model="formItemCliente.nombre_cliente" dense outlined filled type="text"
                 label="Nombre del cliente" class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space />
               <q-input v-model="formItemCliente.telefono_cliente" dense outlined filled type="text" label="Teléfono"
-                class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space />
+                class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space maxlength="10" />
               <q-input v-model="formItemCliente.correo_cliente" dense outlined filled type="text" label="Correo"
                 class="col-xs-12 col-sm-12 col-md-2" hide-bottom-space />
               <q-btn @click="guardarCliente" color="green" text-color="white" dense class="q-pa-sm"
@@ -319,7 +318,9 @@ const filterFn = (val, update, abort) => {
   });
 };
 
-watch(productos, (newRows) => {}, { deep: true });
+watch(productos, (newRows) => {
+
+}, { deep: true });
 
 const totalVentas = computed(() => {
   return productos.value.reduce((sum, item) => sum + (item.total || 0), 0);
@@ -354,6 +355,9 @@ const fetchClienteData = async () => {
 watch(
   () => formItemCliente.value.documento_cliente,
   (newValue) => {
+    formItemCliente.value.nombre_cliente = ""
+    formItemCliente.value.telefono_cliente = ""
+    formItemCliente.value.correo_cliente = ""
     if (newValue) {
       fetchClienteData();
     }

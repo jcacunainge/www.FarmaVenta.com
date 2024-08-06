@@ -2,51 +2,33 @@
   <q-page padding>
     <div class="row items-center q-gutter-sm q-mb-md">
       <q-breadcrumbs>
-        <q-breadcrumbs-el label="Ventas" />
+        <q-breadcrumbs-el label="Modulo de Ventas" />
         <q-breadcrumbs-el label="Pagina de Ventas de Medicamentos" />
       </q-breadcrumbs>
     </div>
     <div class="q-pa-md">
-      <q-table
-        flat
-        bordered
-        title="Historial de Ventas"
-        :rows="filteredRows"
-        :columns="columnsVisible"
-        row-key="_id"
-        class="headerTable"
-        dense
-      >
+      <div class="flex justify-between">
+        <q-input label="Fecha de ventas" type="date" outlined dense v-model="fechaventa" class="q-mb-md"
+          style="width: 210px;" />
+        <div class="text-h6 text-weight-bolder text-blue-10">Total de Ventas: {{ formatCurrency(totalVentas || 0) }}
+        </div>
+      </div>
+      <q-table flat bordered title="Historial de Ventas" :rows="filteredRows" :columns="columns" row-key="_id"
+        :rows-per-page-options="[0]" class="headerTable" dense>
         <template v-slot:top>
           <q-toolbar>
             <q-toolbar-title class="text-light-blue-10 text-h6 gt-xs">
               Consulta e Inventario
             </q-toolbar-title>
             <div class="col-grow flex row justify-end q-gutter-xs">
-              <q-input
-                v-model="filter"
-                outlined
-                dense
-                label="Buscar"
-                class="col-xs-12 col-sm-3 col-md-3"
-              >
+              <q-input v-model="filter" outlined dense label="Buscar" class="col-xs-12 col-sm-3 col-md-3">
                 <template v-slot:append>
                   <q-icon name="search" />
                 </template>
               </q-input>
-              <q-select
-                v-model="visibleColumns"
-                multiple
-                outlined
-                dense
-                options-dense
-                :display-value="$q.lang.table.columns"
-                emit-value
-                map-options
-                :options="columns"
-                option-value="name"
-                class="q-ml-sm col-xs-12 col-sm-3 col-md-3"
-              />
+              <q-select v-model="visibleColumns" multiple outlined dense options-dense
+                :display-value="$q.lang.table.columns" emit-value map-options :options="columns" option-value="name"
+                class="q-ml-sm col-xs-12 col-sm-3 col-md-3" />
             </div>
           </q-toolbar>
         </template>
@@ -63,14 +45,8 @@
         <template v-slot:body="props">
           <q-tr :props="props">
             <q-td auto-width>
-              <q-btn
-                size="sm"
-                color="accent"
-                round
-                dense
-                @click="props.expand = !props.expand"
-                :icon="props.expand ? 'remove' : 'add'"
-              />
+              <q-btn size="sm" color="accent" round dense @click="props.expand = !props.expand"
+                :icon="props.expand ? 'remove' : 'add'" />
             </q-td>
             <q-td v-for="col in props.cols" :key="col.name" :props="props">
               {{ col.value }}
@@ -78,56 +54,26 @@
           </q-tr>
           <q-tr v-show="props.expand" :props="props">
             <q-td colspan="100%">
-              <q-table
-                :rows="props.row.itemsVentas"
-                :columns="itemColumns"
-                flat
-                dense
-                row-key="codigo"
-              >
+              <q-table :rows="props.row.itemsVentas" :columns="itemColumns" flat dense row-key="codigo"
+                :rows-per-page-options="[0]">
+
                 <template #body-cell-opciones="props">
                   <q-td :props="props">
-                    <q-btn
-                      dense
-                      flat
-                      round
-                      color="primary"
-                      icon="las la-ellipsis-v"
-                    >
+                    <q-btn dense flat round color="primary" icon="las la-ellipsis-v">
                       <q-menu transition-show="scale" transition-hide="scale">
                         <q-list dense>
-                          <q-item
-                            v-ripple
-                            v-close-popup
-                            clickable
-                            @click="editItem(props.row)"
-                          >
-                            <q-item-section class="q-mx-sm"
-                              >Editar</q-item-section
-                            >
+                          <q-item v-ripple v-close-popup clickable @click="editItem(props.row)">
+                            <q-item-section class="q-mx-sm">Editar</q-item-section>
                           </q-item>
-                          <q-item
-                            v-ripple
-                            v-close-popup
-                            clickable
-                            @click="
-                              deleteItem(
-                                props.row.notdtope,
-                                props.row.notdtdoc,
-                                props.row.notdnume,
-                                props.row.notdcons
-                              )
-                            "
-                          >
-                            <q-item-section class="q-mx-sm"
-                              >Eliminar</q-item-section
-                            >
+                          <q-item v-ripple v-close-popup clickable @click="deleteItem(props.row.id_venta)">
+                            <q-item-section class="q-mx-sm">Eliminar</q-item-section>
                           </q-item>
                         </q-list>
                       </q-menu>
                     </q-btn>
                   </q-td>
                 </template>
+
               </q-table>
             </q-td>
           </q-tr>
@@ -138,13 +84,80 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { api } from "boot/axios";
 import { date } from "quasar";
+import { useNotify } from 'src/composables/';
+const { messageSuccess, messageWarning } = useNotify();
+import { formatCurrency } from "src/helpers/formatPrecio";
+
 
 const formatFecha = (val) => {
   return date.formatDate(val, "YYYY-MM-DD");
 };
+const timeStamp = Date.now();
+const hoy = date.formatDate(timeStamp, "YYYY-MM-DD");
+const fechaventa = ref(hoy)
+
+const rows = ref([]);
+
+onMounted(async () => {
+  await traerDataVentasFecha()
+});
+
+const traerDataVentasFecha = async () => {
+  try {
+    const { data } = await api.get(`ventas/ventas/fecha/${fechaventa.value}`);
+    rows.value = data;
+  } catch (error) {
+    messageSuccess(error?.response?.data?.message);
+  }
+};
+
+watch(
+  () => fechaventa.value,
+  (newValue) => {
+    if (newValue) {
+      traerDataVentasFecha();
+    }
+  }
+);
+
+const visibleColumns = ref([
+  "nombre_cliente",
+  "documento_cliente",
+  "nombre_usuario",
+  "fecha_venta",
+]);
+
+
+const totalVentas = computed(() => {
+  return rows.value.reduce((sum, venta) => {
+    const totalVenta = venta.itemsVentas.reduce((total, item) => {
+      const itemTotal = (parseFloat(item.total) || 0);
+      return total + itemTotal;
+    }, 0);
+    return sum + totalVenta;
+  }, 0);
+});
+
+const columnsVisible = computed(() => {
+  return columns.filter((col) => visibleColumns.value.includes(col.name));
+});
+
+
+const filter = ref("");
+const filteredRows = computed(() => {
+  const filterText = filter.value.toLowerCase();
+  return rows.value.filter((row) => {
+    return Object.values(row).some((value) => {
+      // Convertir cada valor a string antes de compararlo
+      return String(value).toLowerCase().includes(filterText);
+    });
+  });
+});
+
+
 
 const columns = [
   {
@@ -239,40 +252,5 @@ const itemColumns = [
   },
 ];
 
-const rows = ref([]);
 
-onMounted(async () => {
-  await traerDataVentas();
-});
-
-const traerDataVentas = async () => {
-  try {
-    const { data } = await api.get("ventas/");
-    console.log(data);
-    rows.value = data;
-  } catch (error) {
-    console.warn(error?.response?.data?.message);
-  }
-};
-
-const visibleColumns = ref([
-  "nombre_cliente",
-  "documento_cliente",
-  "nombre_usuario",
-  "fecha_venta",
-]);
-
-const columnsVisible = computed(() => {
-  return columns.filter((col) => visibleColumns.value.includes(col.name));
-});
-
-const filter = ref("");
-const filteredRows = computed(() => {
-  const filterText = filter.value.toLowerCase();
-  return rows.value.filter((row) => {
-    return Object.values(row).some((value) =>
-      String(value).toLowerCase().includes(filterText)
-    );
-  });
-});
 </script>

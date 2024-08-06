@@ -3,24 +3,22 @@
     <div class="row">
       <img class="imgFondo col-md-5" src="../../../public/fondo.jpg" alt="">
       <div class="col-md-7 column">
-        <div class="text-h6 text-center q-mt-xl"> FarmaVenta <br>"Ventas rápidas, salud al instante"</div>
+        <div class="text-h6 text-center q-mt-xl"> FarmaVenta <br>"Ventas rápidas, Salud al instante"</div>
         <div style="margin: 3rem auto;">
           <div class="row q-gutter-md">
             <q-input color="blue-12" v-model="correo" label="Correo" outlined type="email"
-              class="col-xs-12 col-sm-3 col-md-11">
+              class="col-xs-12 col-sm-12 col-md-11">
               <template v-slot:prepend>
                 <q-icon name="email" />
               </template>
             </q-input>
-
             <q-input v-model="contraseña" label="Contraseña" outlined :type="isPwd ? 'password' : 'text'"
-              color="blue-12" class=" col-xs-12 col-sm-3 col-md-11">
+              color="blue-12" class=" col-xs-12 col-sm-12 col-md-11">
               <template v-slot:append>
                 <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
                   @click="isPwd = !isPwd" />
               </template>
             </q-input>
-
           </div>
           <div class="q-gutter-md q-mt-md q-ml-xs">
             <q-btn @click="login" label="Iniciar Sesión" color="primary" style="width: 180px;" flat />
@@ -62,13 +60,13 @@ const login = async () => {
       messageSuccess(response.data.mensaje);
       router.push({ name: 'control-ventas' });
     } else {
-      messageWarning(response.data.mensaje);
+      messageWarning(response.data.mensaje || 'Error desconocido');
     }
   } catch (error) {
-    console.log(error)
-    messageWarning(response.data.mensaje);
+    messageWarning(error.response?.data?.detail);
   }
 };
+
 </script>
 
 <style scoped>

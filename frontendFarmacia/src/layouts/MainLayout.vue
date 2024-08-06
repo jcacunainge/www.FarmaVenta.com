@@ -8,7 +8,7 @@
           <img src="../assets/logo-gecelca-white.svg" style="height: 40px" />
         </div> -->
 
-        <q-toolbar-title class="">Drogueria Rosales Palmar
+        <q-toolbar-title class="">{{ user.nombre_negocio }}
         </q-toolbar-title>
 
         <q-btn flat :icon="$q.fullscreen.isActive ? 'las la-compress' : 'las la-expand'"

@@ -2,7 +2,7 @@
   <q-page padding>
     <div class="row items-center q-gutter-sm q-mb-md">
       <q-breadcrumbs>
-        <q-breadcrumbs-el label="Panel Administrativo" />
+        <q-breadcrumbs-el label="Modulo Administrativo" />
         <q-breadcrumbs-el label="Pagina de Consulta e Inventario Medicamentos" />
       </q-breadcrumbs>
     </div>
