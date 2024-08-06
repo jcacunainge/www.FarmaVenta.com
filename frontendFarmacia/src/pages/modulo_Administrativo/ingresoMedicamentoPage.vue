@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <q-page padding>
     <div class="row items-center q-gutter-sm q-mb-md">
       <q-breadcrumbs>
@@ -136,9 +136,8 @@ const obtenerCliente = async () => {
     console.warn(error?.response?.data?.message);
   }
 };
-</script>
+</script> -->
 
-<!--
 <template>
   <q-page padding>
     <div class="row items-center q-gutter-sm q-mb-md">
@@ -429,7 +428,6 @@ const columns = [
     sortable: true,
     format: (val) => formatCurrency(val),
   },
-
   {
     name: "opciones",
     field: "opciones",
@@ -437,4 +435,4 @@ const columns = [
     align: "center",
   },
 ];
-</script> -->
+</script>
