@@ -22,7 +22,8 @@ app = FastAPI(**app_config)
 origins = [
     "http://localhost:9000",
     "https://farmaventa.netlify.app/",
-    "https://backend-farmacia-jade.vercel.app/"
+    "https://backend-farmacia-jade.vercel.app/",
+    "https://www-farmaventa-com-1.onrender.com/"
 ]
 
 app.add_middleware(
