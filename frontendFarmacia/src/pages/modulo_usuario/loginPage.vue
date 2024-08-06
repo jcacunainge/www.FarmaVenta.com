@@ -65,6 +65,7 @@ const login = async () => {
       messageWarning(response.data.mensaje);
     }
   } catch (error) {
+    console.log(error)
     messageWarning(response.data.mensaje);
   }
 };
